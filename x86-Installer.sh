@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-function PrintHelp () {
+function PrintHelp() {
 echo "
 Advanced Android x86 Installer by SupremeGamers
 Developed by Kiddo Jaxparrow.
@@ -8,7 +8,14 @@ Developed by Kiddo Jaxparrow.
 use $0 {Android image file} - Install the image on the current directory ( At the same partition ).
 use $0 --data-create to create data.img ( 4,8,16,32GB )
 
-Supports Ext4 and Other file systems too!
+create a file named '.include' where you run the script and add the files you want to copy in the iso.
+e.g. gearlock or kernel.benares. NOTE : Useful for developers/Modders.
+
+.include file rules:-
+* one filename per line
+* Should not be empty ( empty file will be skipped)
+
+Supports Ext4 and Other file systems too~
 
 GRUB Code and updating for plain grub or  give grub for manually for other Boot Loaders.. ( Will be fixed later ).
 
@@ -30,6 +37,15 @@ if [[ -z $1 ]];then
 	echo "Error : Please spescify an valid Android x86 OS
 use $0 --help for more details"
 	exit
+fi
+
+if [[ -f .include ]];then
+	if [[ -z $(cat .include) ]];then
+		rm .include
+	else
+		inclist=$(cat .include)
+		incl=true
+	fi
 fi
 
 
@@ -64,8 +80,6 @@ function DataImage() {
 		count=33554432;;
 
 	esac
-
-
 }
 
 if [[ "$@" == *"--data-create"* ]];then
@@ -110,7 +124,7 @@ if [[ $? -eq 0 ]];then
 
 	mkdir temp temp2 "${osname}"
 	clear
-	7z x DarkMatter_Exo4.7.iso -otemp -aoa
+	7z x $filename -otemp -aoa
 	clear
 	7z x temp/system.sfs -otemp2 -aoa
 	clear
@@ -123,6 +137,15 @@ if [[ $? -eq 0 ]];then
 	cp temp2/system.img "${osname}/"
 	touch "${osname}/${osname}"
 	} &>/dev/null
+
+	if [[ $incl == true ]];then
+		clear
+		dialog --title "Installing" --infobox "Copying files included in .include list" 7 45
+		cd temp
+		cp ${inclist[@]} "../${osname}/"
+		cd ..
+	fi
+
 	rm temp temp2 -r
 	clear
 	if [[ $ext4 == "true" ]];then
