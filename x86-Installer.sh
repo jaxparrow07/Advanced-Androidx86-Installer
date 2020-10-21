@@ -156,7 +156,9 @@ if [[ $? -eq 0 ]];then
 Select Data Size next." 7 45
 		DataImage
 		dialog --title "Creating Data" --infobox "Please wait... Creating Data Image of $datasize GB.. It will take more time depending on the size of the data." 9 50
+		{
 		sudo dd if=/dev/zero of="${osname}/data.img" bs=$bs count=$count
+		} &>/dev/null
 	fi
 
 clear
