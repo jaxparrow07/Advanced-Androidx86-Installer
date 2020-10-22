@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+
 function PrintHelp() {
 echo "
 Advanced Android x86 Installer by SupremeGamers
@@ -62,7 +63,7 @@ function DataImage() {
 	         3 "16 GB"
 	         4 "32 GB")
 
-	CHOICE=$(dialog --clear --cancel-label "Exit" \
+	CHOICE=$(./bin/dialog --clear --cancel-label "Exit" \
 	                --title "$TITLE" \
 	                --menu "$MENU" \
 	                $HEIGHT $WIDTH $CHOICE_HEIGHT \
@@ -84,9 +85,9 @@ function DataImage() {
 
 if [[ "$@" == *"--data-create"* ]];then
 DataImage
-dialog --title "Creating Data" --infobox "Please wait... Creating Data Image... Time depending on the size of the image." 10 50
+./bin/dialog --title "Creating Data" --infobox "Please wait... Creating Data Image... Time depending on the size of the image." 10 50
 sudo dd if=/dev/zero of="${osname}/data.img" bs=$bs count=$count
-dialog --title "Complete" --msgbox "Done Creating Data.img" 7 45
+./bin/dialog --title "Complete" --msgbox "Done Creating Data.img" 7 45
 clear
 exit
 fi
@@ -96,8 +97,8 @@ fi
 filename=$(echo "${@%/}")
 ext=".iso"
 osname=$(echo $filename | sed s/"$ext"//)
-parttype=$(df -Th . | head -2 | tail -1 | awk '{print $2;}')
-currentpartition=$(df -h . | head -2 | tail -1 | awk '{print $1;}')
+parttype=$(./bin/df -Th . | head -2 | tail -1 | awk '{print $2;}')
+currentpartition=$(./bin/df -h . | head -2 | tail -1 | awk '{print $1;}')
 
 if [[ -f "$filename" ]];then
 echo ""
@@ -118,17 +119,17 @@ fi
 
 
 clear
-dialog --title "Install Location"  --yesno "Would you like to Install $osname on $currentpartition partition ($parttype)" 9 55
+./bin/dialog --title "Install Location"  --yesno "Would you like to Install $osname on $currentpartition partition ($parttype)" 9 55
 
 if [[ $? -eq 0 ]];then
 
 	mkdir temp temp2 "${osname}"
 	clear
-	7z x $filename -otemp -aoa
+	./bin/7za x $filename -otemp -aoa
 	clear
-	7z x temp/system.sfs -otemp2 -aoa
+	./bin/7za x temp/system.sfs -otemp2 -aoa
 	clear
-	dialog --title "Installing" --infobox "Copying Files" 7 45
+	./bin/dialog --title "Installing" --infobox "Copying Files" 7 45
 	{
 	cp temp/initrd.img "${osname}/"
 	cp temp/ramdisk.img "${osname}/"
@@ -140,7 +141,7 @@ if [[ $? -eq 0 ]];then
 
 	if [[ $incl == true ]];then
 		clear
-		dialog --title "Installing" --infobox "Copying files included in .include list" 7 45
+		./bin/dialog --title "Installing" --infobox "Copying files included in .include list" 7 45
 		cd temp
 		cp ${inclist[@]} "../${osname}/"
 		cd ..
@@ -149,13 +150,13 @@ if [[ $? -eq 0 ]];then
 	rm temp temp2 -r
 	clear
 	if [[ $ext4 == "true" ]];then
-		dialog --title "Info" --msgbox "Current Disk is ext4. No Data image needed." 7 45
+		./bin/dialog --title "Info" --msgbox "Current Disk is ext4. No Data image needed." 7 45
 		mkdir "${osname}/data/";
 	else
-		dialog --title "Info" --msgbox "Current Disk is not detected as ext4.
+		./bin/dialog --title "Info" --msgbox "Current Disk is not detected as ext4.
 Select Data Size next." 7 45
 		DataImage
-		dialog --title "Creating Data" --infobox "Please wait... Creating Data Image of $datasize GB.. It will take more time depending on the size of the data." 9 50
+		./bin/dialog --title "Creating Data" --infobox "Please wait... Creating Data Image of $datasize GB.. It will take more time depending on the size of the data." 9 50
 		{
 		sudo dd if=/dev/zero of="${osname}/data.img" bs=$bs count=$count
 		} &>/dev/null
@@ -179,16 +180,16 @@ search --set=root --file $osname
 linux /kernel quiet root=/dev/ram0 androidboot.selinux=permissive acpi_sleep=s3_bios,s3_mode SRC=/
 initrd /initrd.img" > grubcode
 
-dialog --title "Info" --msgbox "Saved grub code to grubcode" 7 50
+./bin/dialog --title "Info" --msgbox "Saved grub code to grubcode" 7 50
 
 fi
 
-			dialog --title "Complete" --msgbox "Done Installing $osname" 7 45
+			./bin/dialog --title "Complete" --msgbox "Done Installing $osname" 7 45
 			clear
 			echo ""
 
 	else
-		dialog --title "Cancelled" --msgbox "Okay As your wish" 7 45
+		./bin/dialog --title "Cancelled" --msgbox "Okay As your wish" 7 45
 		{ rm temp temp2 -r
 		} &>/dev/null
 		exit
