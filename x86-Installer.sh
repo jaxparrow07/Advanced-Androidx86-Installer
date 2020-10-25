@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+function pass() {
+	notimportant="yes"
+}
 
 function PrintHelp() {
 echo "
@@ -30,13 +33,22 @@ fi
 
 if [[ $(whoami) != "root" ]];then
 
-	echo "Please Run this as a root user."
+	echo "Error : Must be run as root ( Current user - $(whoami) )
+Fix : Please Run this as a root user ( use sudo $0 $@ )"
 	exit
 fi
 
 if [[ -z $1 ]];then
-	echo "Error : Please spescify an valid Android x86 OS
-use $0 --help for more details"
+	echo "Error : Please spescify an valid file
+Fix : use $0 --help for more details"
+	exit
+fi
+
+if [[ $filename == *".iso"* ]];then
+	pass
+else
+	echo "Error : Not a valid Android x86 image
+Fix : Make sure the filetype is iso. Other images not supported."
 	exit
 fi
 
@@ -109,10 +121,10 @@ Use $0 --help for more details"
 exit
 fi
 
-if [[ $parttype == *"ext4"* ]];then
-	ext4="true";
+if [[ $parttype == *"ext"* ]];then
+	ext="true";
 else
-	ext4="false"
+	ext="false"
 fi
 
 
@@ -131,11 +143,11 @@ if [[ $? -eq 0 ]];then
 	clear
 	./bin/dialog --title "Installing" --infobox "Copying Files" 7 45
 	{
-	cp temp/initrd.img "${osname}/"
-	cp temp/ramdisk.img "${osname}/"
-	cp temp/kernel "${osname}/"
-	cp temp/install.img "${osname}/"
-	cp temp2/system.img "${osname}/"
+	mv temp/initrd.img "${osname}/"
+	mv temp/ramdisk.img "${osname}/"
+	mv temp/kernel "${osname}/"
+	mv temp/install.img "${osname}/"
+	mv temp2/system.img "${osname}/"
 	touch "${osname}/${osname}"
 	} &>/dev/null
 
@@ -149,11 +161,11 @@ if [[ $? -eq 0 ]];then
 
 	rm temp temp2 -r
 	clear
-	if [[ $ext4 == "true" ]];then
-		./bin/dialog --title "Info" --msgbox "Current Disk is ext4. No Data image needed." 7 45
+	if [[ $ext == "true" ]];then
+		./bin/dialog --title "Info" --msgbox "Current Disk is ext. No Data image needed." 7 45
 		mkdir "${osname}/data/";
 	else
-		./bin/dialog --title "Info" --msgbox "Current Disk is not detected as ext4.
+		./bin/dialog --title "Info" --msgbox "Current Disk is not detected as ext format.
 Select Data Size next." 7 45
 		DataImage
 		./bin/dialog --title "Creating Data" --infobox "Please wait... Creating Data Image of $datasize GB.. It will take more time depending on the size of the data." 9 50
@@ -192,5 +204,6 @@ fi
 		./bin/dialog --title "Cancelled" --msgbox "Okay As your wish" 7 45
 		{ rm temp temp2 -r
 		} &>/dev/null
+		clear
 		exit
 	fi
