@@ -171,10 +171,13 @@ clear
 			# Adding Boot Entries
 
 			if [[ -f "/etc/grub.d/40_custom" ]];then
-			echo "insmod all_video
+			echo "
+menuentry '$osname' {
+insmod all_video
 search --set=root --file $osname
 linux /kernel quiet root=/dev/ram0 androidboot.selinux=permissive acpi_sleep=s3_bios,s3_mode SRC=/
-initrd /initrd.img" >> "/etc/grub.d/40_custom"
+initrd /initrd.img
+}" >> "/etc/grub.d/40_custom"
 
 sudo update-grub
 
