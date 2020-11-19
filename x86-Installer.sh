@@ -91,7 +91,7 @@ function DataImage() {
 if [[ "$@" == *"--data-create"* ]];then
 DataImage
 ./bin/dialog --title "Creating Data" --infobox "Please wait... Creating Data Image... Time depending on the size of the image." 10 50
-sudo dd if=/dev/zero of="${osname}/data.img" bs=$bs count=$count
+sudo dd if=/dev/zero of="data.img" bs=$bs count=$count
 ./bin/dialog --title "Complete" --msgbox "Done Creating Data.img" 7 45
 clear
 exit
