@@ -10,7 +10,7 @@ Just feel free to fork it and make pull request.
 * `dialog` - for showing outputs and menus
 * `dh` - To Detect partition types
 * `7z` - for Extracting iso and sfs
-<br>
+
 _Other Binaries are pre-installed in your linux system_
 
 ## Usage
