@@ -27,7 +27,7 @@ Just for testing purposes."
 exit
 }
 
-if [[ $@ == *"--help" ]];then
+if [[ $@ == *"--help"* ]];then
 	PrintHelp
 fi
 
