@@ -22,8 +22,8 @@ This requires for:
 * Detecting Partition Type
 * Adding GRUB Entry
 * Updating Grub
-
 <br>
+
 ## Simple UI ( uses dialog )
 ![Usage](images/sample.png)
 _It will detect the partition type and create a data.img or a data folder_
