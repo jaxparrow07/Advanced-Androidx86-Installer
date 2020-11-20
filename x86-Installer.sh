@@ -92,7 +92,7 @@ if [[ "$@" == *"--data-create"* ]];then
 DataImage
 dialog --title "Creating Data" --infobox "Please wait... Creating Data Image... Time depending on the size of the image." 10 50
 sudo dd if=/dev/zero of="data.img" bs=$bs count=$count
-dialog --title "Complete" --msgbox "Done Creating Data.img" 7 45
+dialog --title "Complete" --msgbox "Done" 7 45
 clear
 exit
 fi
