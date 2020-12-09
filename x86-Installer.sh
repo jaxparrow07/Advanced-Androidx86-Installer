@@ -171,6 +171,19 @@ if [[ $? -eq 0 ]];then
 	touch "${osname}/${osname}"
 	} &>/dev/null
 
+	if [[ -f .include ]];then
+		if [[ ! -z "$(cat .include)" ]];then
+			inclist="$(cat .include)"
+			incl=true
+
+		fi
+	elif [[ -f "${osname}/.include" ]];then
+		if [[ ! -z $(cat "${osname}/.include") ]];then
+			inclist="$(cat ${osname}/.include)"
+			incl=true
+		fi
+	fi
+
 	if [[ $incl == true ]];then
 		clear
 		dialog --title "Installing" --infobox "Copying files included in .include list" 7 45
@@ -198,24 +211,24 @@ clear
 			# Adding Boot Entries
 
 			if [[ -f "/etc/grub.d/40_custom" ]];then
-			echo "
+echo "
 menuentry '$osname' {
 insmod all_video
-search --set=root --file $osname
-linux /kernel quiet root=/dev/ram0 androidboot.selinux=permissive acpi_sleep=s3_bios,s3_mode SRC=/
-initrd /initrd.img
+search --set=root --file /${osname}/findme
+linux /${osname}/kernel quiet root=/dev/ram0 androidboot.selinux=permissive acpi_sleep=s3_bios,s3_mode SRC=/
+initrd /${osname}/initrd.img
 }" >> "/etc/grub.d/40_custom"
 
 sudo update-grub
 
 else
-echo "Saved grub code to 'grubcode' file. You need to manually add it to boot."
-echo "insmod all_video
-search --set=root --file $osname
-linux /kernel quiet root=/dev/ram0 androidboot.selinux=permissive acpi_sleep=s3_bios,s3_mode SRC=/
-initrd /initrd.img" > grubcode
 
-dialog --title "Info" --msgbox "Saved grub code to grubcode" 7 50
+echo "insmod all_video
+search --set=root --file /${osname}/findme
+linux /${osname}/kernel quiet root=/dev/ram0 androidboot.selinux=permissive acpi_sleep=s3_bios,s3_mode SRC=/
+initrd /${osname}/initrd.img" > grubcode.txt
+
+dialog --title "Info" --msgbox "Saved grub code to grubcode.txt" 7 50
 
 fi
 
