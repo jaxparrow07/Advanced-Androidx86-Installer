@@ -168,7 +168,7 @@ if [[ $? -eq 0 ]];then
 	mv temp/kernel "${osname}/"
 	mv temp/install.img "${osname}/"
 	mv temp2/system.img "${osname}/"
-	touch "${osname}/${osname}"
+	touch "${osname}/findme"
 	} &>/dev/null
 
 	if [[ -f .include ]];then
